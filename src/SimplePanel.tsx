@@ -6,22 +6,21 @@ import  {HorizontalGroup, stylesFactory, useTheme} from '@grafana/ui';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
-
 export const SimplePanel: React.FC<Props> = ({options, data, width, height}) => {
   const theme = useTheme();
   const styles = getStyles(theme);
 
   const getShape = (field: Field, valueIndex: number) => {
     const config = field.config as FieldConfig<DemoFieldConfig>;
-    
+
     const displayValue: DisplayValue = field.display ? field.display(field.values.get(valueIndex)) : {
       text: field.values.get(valueIndex),
       numeric: field.values.get(valueIndex),
       suffix: ''
     };
 
-    return <div className={styles[config.custom!.shape]}>
-      <span>{displayValue.text} {displayValue.suffix}</span>
+    return <div className={cx(styles[config.custom ? config.custom.shape : 'circle'], css`font-family: ${options.fontFace || 'sans-serif'};`)}>
+      <span>{displayValue.text}{displayValue.suffix}</span>
     </div>
   }
 
@@ -39,6 +38,7 @@ export const SimplePanel: React.FC<Props> = ({options, data, width, height}) => 
       }
     }
   }
+
   return (
     <div
       className={cx(
@@ -55,7 +55,6 @@ export const SimplePanel: React.FC<Props> = ({options, data, width, height}) => 
         </HorizontalGroup>
       </div>
 
-
       <div className={styles.textBox}>
         {options.showSeriesCount && (
           <div
@@ -68,7 +67,6 @@ export const SimplePanel: React.FC<Props> = ({options, data, width, height}) => 
           </div>
         )}
       </div>
-
 
     </div>
   );
@@ -83,11 +81,11 @@ const getStyles = stylesFactory((theme: GrafanaTheme) => {
     text-align: center;
     background: ${theme.isLight ? theme.palette.greenBase : theme.palette.blue95};
     >span {
-      width: 50px;
-      height: 50px;
-      line-height: 50px;
+      width: 70px;
+      height: 70px;
+      line-height: 70px;
       position: absolute;
-      left: -25px;
+      left: -35px;
       top: 50%;
       text-align: center;
     }
@@ -109,8 +107,8 @@ const getStyles = stylesFactory((theme: GrafanaTheme) => {
       padding: 10px;
     `,
     circle: cx(shape, css`
-      width: 50px;
-      height: 50px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
      >span {
       top: 0;
@@ -118,8 +116,8 @@ const getStyles = stylesFactory((theme: GrafanaTheme) => {
       }
     `),
     square: cx(shape, css`
-      width: 50px;
-      height: 50px;
+      width: 70px;
+      height: 70px;
       >span {
       top: 0;
       left: 0;
@@ -128,9 +126,9 @@ const getStyles = stylesFactory((theme: GrafanaTheme) => {
     triangle: cx(shape, css`
       width: 0;
       height: 0;
-      border-left: 25px solid transparent;
-      border-right: 25px solid transparent;
-      border-bottom: 50px solid ${theme.isLight ? theme.palette.greenBase : theme.palette.blue95};
+      border-left: 35px solid transparent;
+      border-right: 35px solid transparent;
+      border-bottom: 70px solid ${theme.isLight ? theme.palette.greenBase : theme.palette.blue95};
     `),
   };
 });
