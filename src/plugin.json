@@ -1,0 +1,34 @@
+{
+  "type": "panel",
+  "name": "plugins-demo",
+  "id": "grafana-labs-plugins-demo",
+  "info": {
+    "description": "Grafana 7 plugins demo",
+    "author": {
+      "name": "Dominik Prokop",
+      "url": ""
+    },
+    "keywords": [],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/grafana/simple-react-panel"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaVersion": "6.3.x",
+    "plugins": []
+  }
+}
