@@ -76,19 +76,6 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
           ))}
         </HorizontalGroup>
       </div>
-
-      <div className={styles.textBox}>
-        {options.showSeriesCount && (
-          <div
-            className={css`
-              font-size: ${theme.typography.size[options.seriesCountSize]};
-              font-family: ${options.fontFace || 'sans-serif'};
-            `}
-          >
-            Number of series: {data.series.length}
-          </div>
-        )}
-      </div>
     </div>
   );
 };
