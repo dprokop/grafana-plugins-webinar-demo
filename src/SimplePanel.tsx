@@ -1,28 +1,43 @@
 import React from 'react';
-import {DisplayValue, Field, FieldConfig, FieldType, GrafanaTheme, PanelProps} from '@grafana/data';
-import {DemoFieldConfig, SimpleOptions} from 'types';
-import {css, cx} from 'emotion';
-import  {HorizontalGroup, stylesFactory, useTheme} from '@grafana/ui';
+import { DisplayValue, Field, FieldConfig, FieldType, GrafanaTheme, PanelProps } from '@grafana/data';
+import { DemoFieldConfig, SimpleOptions } from 'types';
+import { css, cx } from 'emotion';
+import { HorizontalGroup, stylesFactory, useTheme } from '@grafana/ui';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
-export const SimplePanel: React.FC<Props> = ({options, data, width, height}) => {
+export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
 
+  // returns shape component based on field configuration
   const getShape = (field: Field, valueIndex: number) => {
     const config = field.config as FieldConfig<DemoFieldConfig>;
 
-    const displayValue: DisplayValue = field.display ? field.display(field.values.get(valueIndex)) : {
-      text: field.values.get(valueIndex),
-      numeric: field.values.get(valueIndex),
-      suffix: ''
-    };
+    const displayValue: DisplayValue = field.display
+      ? field.display(field.values.get(valueIndex))
+      : {
+          text: field.values.get(valueIndex),
+          numeric: field.values.get(valueIndex),
+          suffix: '',
+        };
 
-    return <div className={cx(styles[config.custom ? config.custom.shape : 'circle'], css`font-family: ${options.fontFace || 'sans-serif'};`)}>
-      <span>{displayValue.text}{displayValue.suffix}</span>
-    </div>
-  }
+    return (
+      <div
+        className={cx(
+          styles[config.custom ? config.custom.shape : 'circle'],
+          css`
+            font-family: ${options.fontFace || 'sans-serif'};
+          `
+        )}
+      >
+        <span>
+          {displayValue.text}
+          {displayValue.suffix}
+        </span>
+      </div>
+    );
+  };
 
   const shapes = [];
 
@@ -31,11 +46,11 @@ export const SimplePanel: React.FC<Props> = ({options, data, width, height}) => 
       if (f.type == FieldType.time) {
         continue;
       }
+      const fieldShapes = [];
       for (let i = 0; i < f.values.length; i++) {
-        shapes.push(
-          getShape(f, i)
-        )
+        fieldShapes.push(getShape(f, i));
       }
+      shapes.push(fieldShapes);
     }
   }
 
@@ -49,9 +64,16 @@ export const SimplePanel: React.FC<Props> = ({options, data, width, height}) => 
         `
       )}
     >
-      <div className={css`height: ${height}px; overflow: hidden;`}>
-        <HorizontalGroup wrap>
-          {shapes}
+      <div
+        className={css`
+          height: ${height}px;
+          overflow: hidden;
+        `}
+      >
+        <HorizontalGroup justify='space-between' wrap>
+          {shapes.map(s => (
+            <HorizontalGroup>{s.map(f => f)}</HorizontalGroup>
+          ))}
         </HorizontalGroup>
       </div>
 
@@ -67,7 +89,6 @@ export const SimplePanel: React.FC<Props> = ({options, data, width, height}) => 
           </div>
         )}
       </div>
-
     </div>
   );
 };
@@ -80,7 +101,7 @@ const getStyles = stylesFactory((theme: GrafanaTheme) => {
     align-items: center;
     text-align: center;
     background: ${theme.isLight ? theme.palette.greenBase : theme.palette.blue95};
-    >span {
+    > span {
       width: 70px;
       height: 70px;
       line-height: 70px;
@@ -106,29 +127,39 @@ const getStyles = stylesFactory((theme: GrafanaTheme) => {
       left: 0;
       padding: 10px;
     `,
-    circle: cx(shape, css`
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-     >span {
-      top: 0;
-      left: 0;
-      }
-    `),
-    square: cx(shape, css`
-      width: 70px;
-      height: 70px;
-      >span {
-      top: 0;
-      left: 0;
-      }
-    `),
-    triangle: cx(shape, css`
-      width: 0;
-      height: 0;
-      border-left: 35px solid transparent;
-      border-right: 35px solid transparent;
-      border-bottom: 70px solid ${theme.isLight ? theme.palette.greenBase : theme.palette.blue95};
-    `),
+    circle: cx(
+      shape,
+      css`
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        > span {
+          top: 0;
+          left: 0;
+        }
+      `
+    ),
+    square: cx(
+      shape,
+      css`
+        width: 70px;
+        height: 70px;
+        > span {
+          top: 0;
+          left: 0;
+        }
+      `
+    ),
+    triangle: cx(
+      shape,
+      css`
+        width: 0;
+        height: 0;
+        background: none;
+        border-left: 35px solid transparent;
+        border-right: 35px solid transparent;
+        border-bottom: 70px solid ${theme.isLight ? theme.palette.greenBase : theme.palette.blue95};
+      `
+    ),
   };
 });
